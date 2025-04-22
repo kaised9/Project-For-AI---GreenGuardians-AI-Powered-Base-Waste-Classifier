@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenGuardian: AI-Powered Waste Classifier</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <section class="contact-section">
+        <div class="contact-banner">
+            <img src="{% static 'image/logo.png' %}" alt="GreenGuardian Logo" style="width: 156px; height: auto;">
+            <h2><b>Welcome To</b></h2>
+            <h3>GreenGuardian: AI-Powered Waste Classifier</h3>
+            <p>Smart Waste Sorting for a Greener Tomorrow</p>
+        </div>
+
+        <div class="contact-container">
+            <h2 class="contact-title">Classify Your Waste in Seconds</h2>
+            <p class="contact-description">
+                Upload an image of any waste item and let <span style="color:red;">GreenGuardian</span>
+                identify the type instantly using our smart AI model.
+            </p>
+
+            <form action="/classify" method="post" enctype="multipart/form-data" class="contact-form">
+                {% csrf_token %}
+                <label>Upload Waste Image</label>
+                <input type="file" name="waste_image" accept="image/*" required>
+                <button type="submit">Classify Waste</button>
+            </form>
+
+            <div class="result-box">
+                <h4>Prediction Result</h4>
+                <p><strong>Waste Type:</strong> {{ prediction.label }}</p>
+                <p><strong>Confidence:</strong> {{ prediction.confidence }}%</p>
+
+                <!-- Feature 1: Material Breakdown -->
+                <div class="result-extra">
+                    <strong>Material Insight:</strong> {{ prediction.material_type }}<br>
+                    <strong>Recyclability:</strong> {{ prediction.recyclable|yesno:"Yes,No" }}<br>
+                </div>
+
+                <!-- Feature 2: Anomaly Detection -->
+                {% if prediction.label == "Unknown" %}
+                <div class="result-extra" style="border-left-color: red;">
+                    <strong>⚠️ Unrecognized Item:</strong> This waste type is not in our database. Help us improve by reporting it!
+                </div>
+                {% endif %}
+
+                <!-- Feature 3: Confidence Bar -->
+                <div class="result-extra">
+                    <strong>Confidence Level:</strong>
+                    <div style="background: #ddd; border-radius: 5px; overflow: hidden; height: 10px;">
+                        <div style="width: {{ prediction.confidence }}%; background: #4caf50; height: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Before/After Suggestion -->
+                <div class="result-extra">
+                    <strong>After Recycling Suggestion:</strong>
+                    {% if prediction.label == "Plastic" %}
+                        Your item could become a reusable water bottle!
+                    {% elif prediction.label == "Paper" %}
+                        This could be turned into notebook paper!
+                    {% elif prediction.label == "Metal" %}
+                        Possibly reused in electronics or construction.
+                    {% elif prediction.label == "Organic" %}
+                        Great for composting into garden fertilizer.
+                    {% else %}
+                        Recycling suggestion unavailable.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="trend-dashboard">
+        <h3>📊 Category Trends</h3>
+        <canvas id="categoryChart" width="400" height="250"></canvas>
+    </div>
+    
+
+    <footer class="contact-footer">
+        <div class="footer-item">
+            <h4>♻️ Eco-Friendly</h4>
+            <p>Promoting sustainable habits</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>🤖 Smart AI</h4>
+            <p>Classifies waste accurately</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>📊 Insights</h4>
+            <p>Track your eco-impact</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>🌍 Go Green</h4>
+            <p>Save the planet with every click</p>
+        </div>
+    </footer>
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass'],
+                datasets: [{
+                    label: 'Top Waste Types',
+                    data: [15, 10, 5, 8, 3], // Example: replace with real values
+                    backgroundColor: [
+                        '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Most Classified Waste Categories'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        </script>
+        
+</body>
+</html>
