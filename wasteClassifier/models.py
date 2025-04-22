@@ -1,5 +1,5 @@
 
-# Create your models here.
+# Create Models here.
 from django.db import models
 
 class WastePrediction(models.Model):

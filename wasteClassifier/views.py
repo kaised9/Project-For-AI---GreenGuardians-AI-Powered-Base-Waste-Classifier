@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+# Create views.
 
 def home(request):
     # Renders the home.html template
@@ -11,7 +11,7 @@ def classify(request):
     if request.method == 'POST':
         image = request.FILES['waste_image']
 
-        # Your model prediction logic here
+        # Model prediction logic
         prediction_label = "Plastic"
         confidence_score = 87
         recyclable = True

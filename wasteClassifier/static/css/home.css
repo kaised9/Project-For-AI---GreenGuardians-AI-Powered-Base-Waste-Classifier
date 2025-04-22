@@ -111,7 +111,7 @@ body {
     color: #2e7d32;
 }
 
-/* Extended Result Features */
+/*Result Features */
 .result-extra {
     margin-top: 20px;
     text-align: left;
@@ -159,7 +159,7 @@ body {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    max-width: 1050px; /* Reduce width */
+    max-width: 1050px; 
 }
 .trend-dashboard h3 {
     font-size: 22px;
@@ -168,6 +168,6 @@ body {
 }
 
 .trend-dashboard canvas {
-    height: 450px !important; /* Reduce height */
+    height: 450px !important; 
     width: auto !important;
 }
