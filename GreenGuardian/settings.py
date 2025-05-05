@@ -61,8 +61,8 @@ ROOT_URLCONF = 'GreenGuardian.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates' ],      # your project‑level templates folder
-        'APP_DIRS': True,                         # also look in each app’s templates/
+        'DIRS': [BASE_DIR / 'wasteClassifier/templates'],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -73,7 +73,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'GreenGuardian.wsgi.application'
 
 
@@ -135,6 +134,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Static files (CSS, JS, images)
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+# filepath: GreenGuardian/settings.py
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'wasteClassifier/static']
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

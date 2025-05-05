@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +9,6 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <!-- Feature 4: Before/After Suggestion -->
+                <!-- Feature 4: After Recycling Suggestion -->
                 <div class="result-extra">
                     <strong>After Recycling Suggestion:</strong>
                     {% if prediction.label == "Plastic" %}
@@ -71,6 +71,8 @@
                         Possibly reused in electronics or construction.
                     {% elif prediction.label == "Organic" %}
                         Great for composting into garden fertilizer.
+                    {% elif prediction.label == "Fabric" %}
+                        Consider donating or repurposing your fabric to reduce waste.
                     {% else %}
                         Recycling suggestion unavailable.
                     {% endif %}
@@ -88,35 +90,37 @@
     <footer class="contact-footer">
         <div class="footer-item">
             <h4>♻️ Eco-Friendly</h4>
-            <p>Promoting sustainable habits</p>
+            <p>Promoting Sustainable Habits</p>
         </div>
 
         <div class="footer-item">
             <h4>🤖 Smart AI</h4>
-            <p>Classifies waste accurately</p>
+            <p>Classifies Waste Accurately</p>
         </div>
 
         <div class="footer-item">
             <h4>📊 Insights</h4>
-            <p>Track your eco-impact</p>
+            <p>Track Your Eco-Impact</p>
         </div>
 
         <div class="footer-item">
             <h4>🌍 Go Green</h4>
-            <p>Save the planet with every click</p>
+            <p>Save The Planet With Every Click</p>
         </div>
     </footer>
+
+    <!-- JavaScript -->
     <script>
         const ctx = document.getElementById('categoryChart').getContext('2d');
         const categoryChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass'],
+                labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric'],
                 datasets: [{
                     label: 'Top Waste Types',
-                    data: [15, 10, 5, 8, 3], // Just Example: Replace with real values.
+                    data: [15, 10, 5, 8, 3, 2], // Example: Replace with real values
                     backgroundColor: [
-                        '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0'
+                        '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0', '#3f51b5'
                     ]
                 }]
             },
@@ -136,7 +140,6 @@
                 }
             }
         });
-        </script>
-        
+    </script>
 </body>
 </html>
