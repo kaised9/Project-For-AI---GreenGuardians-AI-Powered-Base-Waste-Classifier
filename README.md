@@ -7,7 +7,7 @@ GreenGuardian is a Django-based web application that uses artificial intelligenc
 
 - 🖼 Upload an image of waste
   
-- 🤖 AI model classifies it (e.g., plastic, paper, organic, etc.)
+- 🤖 AI model classifies it (plastic, paper, organic,metal,organic,febric etc.)
   
 - 📊 Displays the prediction result
   
@@ -60,7 +60,7 @@ Go to homepage
 
 Choose a waste image to upload
 
-Click "Predict"
+Click "Classify Waste"
 
 View classification result below the image
 
