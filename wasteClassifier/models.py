@@ -1,4 +1,4 @@
-# Django model (already in your file)
+# Django model 
 from django.db import models
 import torch.nn as nn
 
@@ -13,7 +13,7 @@ class WastePrediction(models.Model):
     def __str__(self):
         return f"{self.label} ({self.confidence}%)"
 
-# PyTorch model (add this below the Django model)
+# PyTorch model 
 
 
 class WasteClassifier(nn.Module):

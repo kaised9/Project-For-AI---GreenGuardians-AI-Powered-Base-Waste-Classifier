@@ -6,4 +6,4 @@ from .models import WastePrediction
 class WastePredictionAdmin(admin.ModelAdmin):
     list_display = ('label', 'confidence', 'recyclable', 'created_at')
 
-# Register models.
+

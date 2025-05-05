@@ -27,7 +27,13 @@
                 identify the type instantly using our smart AI model.
             </p>
 
-            <form action="/classify" method="post" enctype="multipart/form-data" class="contact-form">
+            <form action="/classify/" method="post" enctype="multipart/form-data" class="contact-form">            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}            {% if prediction %}
+            <div class="result-box">
+                <!-- ... your result code ... -->
+            </div>
+            {% endif %}
                 {% csrf_token %}
                 <label>Upload Waste Image</label>
                 <input type="file" name="waste_image" accept="image/*" required>
@@ -118,7 +124,7 @@
                 labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric'],
                 datasets: [{
                     label: 'Top Waste Types',
-                    data: [15, 10, 5, 8, 3, 2], // Example: Replace with real values
+                    data: [15, 10, 5, 8, 3, 2],
                     backgroundColor: [
                         '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0', '#3f51b5'
                     ]

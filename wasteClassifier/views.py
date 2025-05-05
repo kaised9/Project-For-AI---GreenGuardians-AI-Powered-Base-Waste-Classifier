@@ -26,7 +26,7 @@ except EOFError:
     logger.error(f"Model file at {model_path} is corrupted. Please retrain the model.")
     model = None
 
-# Waste categories (match your training folders)
+# Waste categories 
 class_names = ['Glass', 'Metal', 'Organic', 'Paper', 'Plastic', 'Fabric', 'Unknown']
 
 # Material and recyclability map
@@ -34,9 +34,9 @@ material_map = {
     'Plastic': ('Polyethylene (PE)', True),
     'Paper': ('Cellulose', True),
     'Metal': ('Aluminum or Steel', True),
-    'Organic': ('Biodegradable (e.g., food waste)', True),
+    'Organic': ('Biodegradable', True),
     'Glass': ('Silica (SiO₂)', True),
-    'Fabric': ('Fabric (Cotton, Polyester)', False)
+    'Fabric': ('Fabric (Cotton , Polyester)', False)
 }
 
 def home(request):
@@ -46,7 +46,7 @@ def home(request):
 def classify(request):
     if request.method == 'POST':
         try:
-            image_file = request.FILES.get('image')
+            image_file = request.FILES.get('waste_image')
             if not image_file:
                 return render(request, 'home.html', {'error': 'No image uploaded.'})
             

@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-from wasteClassifier.models import WasteClassifier  #return render(request, 'home.html', {'error': 'Uploaded file is not an image. Please upload a valid image.'})return render(request, 'home.html', {'error': 'Uploaded file is not an image. Please upload a valid image.'})return render(request, 'home.html', {'error': 'Uploaded file is not an image. Please upload a valid image.'})Import your AI model
+from wasteClassifier.models import WasteClassifier 
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -14,7 +14,7 @@ transform = transforms.Compose([
     transforms.Normalize([0.5], [0.5])  # normalize image values to [-1, 1]
 ])
 
-# Step 2: Load dataset (folder should be data/train with subfolders for classes)
+# Step 2: Load dataset
 dataset = datasets.ImageFolder('data/train', transform=transform)
 train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
@@ -25,7 +25,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Step 4: Train the model
 print("🔄 Training started...\n")
-for epoch in range(5):  # You can increase the number of epochs
+for epoch in range(5):  
     running_loss = 0.0
     for images, labels in train_loader:
         outputs = model(images)
