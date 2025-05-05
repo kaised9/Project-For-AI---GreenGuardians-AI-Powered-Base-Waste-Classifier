@@ -27,14 +27,24 @@ GreenGuardian is a Django-based web application that uses artificial intelligenc
 
 GreenGuardian/
 ├── GreenGuardian/ # Main Django settings and URLs
+
 ├── wasteClassifier/ # Main app
+
 │ ├── templates/ # HTML files
+
 │ ├── static/ # CSS, JS, image files
+
 │ ├── views.py # App logic
+
+
 │ ├── urls.py # App URL routes
+
 │ └── models.py # Model (if any)
+
 ├── media/ # Uploaded images
+
 ├── db.sqlite3 # Database
+
 └── manage.py # Django management script
 
 
