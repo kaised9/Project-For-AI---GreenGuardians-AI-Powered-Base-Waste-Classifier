@@ -17,7 +17,7 @@ GreenGuardian is a Django-based web application that uses artificial intelligenc
 ## 🛠 Tech Stack
 
 - **Backend**: Python, Django
-- **Frontend**: HTML, CSS
+- **Frontend**: HTML, CSS , Javascript
 - **AI Model**: Trained machine learning model for waste classification
 - **Database**: SQLite (default for Django)
 
@@ -75,5 +75,7 @@ This project is for educational purposes only.
 # Contact 
 
 Name  : Md. Kaised Mollick 
+
 Gmail : a.r.kaised.7698@gmail.com
+
 Green University Of Bangladesh
