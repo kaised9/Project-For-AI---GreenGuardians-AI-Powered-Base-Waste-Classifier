@@ -6,6 +6,9 @@ from PIL import Image
 from .models import WasteClassifier, WastePrediction
 import os
 import logging
+from django.db.models import Count
+from datetime import timedelta
+from django.utils import timezone
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -16,18 +19,11 @@ model_path = os.path.join(BASE_DIR, 'waste_model.pth')
 
 # Load trained model once
 model = WasteClassifier()
-try:
-    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-    model.eval()
-except FileNotFoundError:
-    logger.error(f"Model file not found at {model_path}. Please train the model first.")
-    model = None
-except EOFError:
-    logger.error(f"Model file at {model_path} is corrupted. Please retrain the model.")
-    model = None
+model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+model.eval()
 
 # Waste categories 
-class_names = ['Glass', 'Metal', 'Organic', 'Paper', 'Plastic', 'Fabric', 'Unknown']
+class_names = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
 
 # Material and recyclability map
 material_map = {
@@ -39,22 +35,98 @@ material_map = {
     'Fabric': ('Fabric (Cotton , Polyester)', False)
 }
 
+# Waste category indices
+category_indices = {'Fabric': 0, 'Glass': 1, 'Metal': 2, 'Organic': 3, 'Paper': 4, 'Plastic': 5}
+
 def home(request):
-    """Render the home page."""
-    return render(request, 'home.html')
+    # All-time counts (existing)
+    category_counts = (
+        WastePrediction.objects.values('label')
+        .annotate(count=Count('label'))
+        .order_by('-count')
+    )
+    fixed_labels = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
+    category_dict = {item['label']: item['count'] for item in category_counts}
+    counts = [category_dict.get(label, 0) for label in fixed_labels]
+
+    # Weekly trend counts (last 7 days)
+    last_week = timezone.now() - timedelta(days=7)
+    trend_data = (
+        WastePrediction.objects.filter(created_at__gte=last_week)
+        .values('label')
+        .annotate(count=Count('label'))
+    )
+    trend_dict = {item['label']: item['count'] for item in trend_data}
+    weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+    weekly_labels = fixed_labels  # Always keep order
+
+    context = {
+        'labels': fixed_labels,
+        'counts': counts,
+        'weekly_labels': weekly_labels,
+        'weekly_counts': weekly_counts,
+    }
+    return render(request, 'home.html', context)
 
 def classify(request):
+    fixed_labels = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
+
     if request.method == 'POST':
         try:
             image_file = request.FILES.get('waste_image')
             if not image_file:
-                return render(request, 'home.html', {'error': 'No image uploaded.'})
+                # Also pass trends data on error
+                category_counts = (
+                    WastePrediction.objects.values('label')
+                    .annotate(count=Count('label'))
+                    .order_by('-count')
+                )
+                category_dict = {item['label']: item['count'] for item in category_counts}
+                counts = [category_dict.get(label, 0) for label in fixed_labels]
+
+                last_week = timezone.now() - timedelta(days=7)
+                trend_data = (
+                    WastePrediction.objects.filter(created_at__gte=last_week)
+                    .values('label')
+                    .annotate(count=Count('label'))
+                )
+                trend_dict = {item['label']: item['count'] for item in trend_data}
+                weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+
+                return render(request, 'home.html', {
+                    'error': 'No image uploaded.',
+                    'labels': fixed_labels,
+                    'counts': counts,
+                    'weekly_counts': weekly_counts,
+                })
             
             # Validate image type
             try:
                 image = Image.open(image_file).convert('RGB')
             except:
-                return render(request, 'home.html', {'error': 'Uploaded file is not an image. Please upload a valid image.'})
+                category_counts = (
+                    WastePrediction.objects.values('label')
+                    .annotate(count=Count('label'))
+                    .order_by('-count')
+                )
+                category_dict = {item['label']: item['count'] for item in category_counts}
+                counts = [category_dict.get(label, 0) for label in fixed_labels]
+
+                last_week = timezone.now() - timedelta(days=7)
+                trend_data = (
+                    WastePrediction.objects.filter(created_at__gte=last_week)
+                    .values('label')
+                    .annotate(count=Count('label'))
+                )
+                trend_dict = {item['label']: item['count'] for item in trend_data}
+                weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+
+                return render(request, 'home.html', {
+                    'error': 'Uploaded file is not an image. Please upload a valid image.',
+                    'labels': fixed_labels,
+                    'counts': counts,
+                    'weekly_counts': weekly_counts,
+                })
             
             # Preprocess image
             transform = transforms.Compose([
@@ -88,13 +160,100 @@ def classify(request):
                 'label': label,
                 'confidence': round(confidence_score, 2),
                 'recyclable': recyclable,
-                'material_type': material_type
             }
 
-            return render(request, 'home.html', {'prediction': prediction})
+            # All-time counts
+            category_counts = (
+                WastePrediction.objects.values('label')
+                .annotate(count=Count('label'))
+                .order_by('-count')
+            )
+            category_dict = {item['label']: item['count'] for item in category_counts}
+            counts = [category_dict.get(label, 0) for label in fixed_labels]
 
+            # Weekly trends (last 7 days)
+            last_week = timezone.now() - timedelta(days=7)
+            trend_data = (
+                WastePrediction.objects.filter(created_at__gte=last_week)
+                .values('label')
+                .annotate(count=Count('label'))
+            )
+            trend_dict = {item['label']: item['count'] for item in trend_data}
+            weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+
+            context = {
+                'prediction': prediction,  # if available
+                'labels': fixed_labels,
+                'counts': counts,
+                'weekly_labels': fixed_labels,
+                'weekly_counts': weekly_counts,
+            }
+            return render(request, 'home.html', context)
         except Exception as e:
-            logger.error(f"Error during prediction: {e}")
-            return render(request, 'home.html', {'error': str(e)})
+            # Also pass trends data on error
+            category_counts = (
+                WastePrediction.objects.values('label')
+                .annotate(count=Count('label'))
+                .order_by('-count')
+            )
+            category_dict = {item['label']: item['count'] for item in category_counts}
+            counts = [category_dict.get(label, 0) for label in fixed_labels]
 
-    return render(request, 'home.html')
+            last_week = timezone.now() - timedelta(days=7)
+            trend_data = (
+                WastePrediction.objects.filter(created_at__gte=last_week)
+                .values('label')
+                .annotate(count=Count('label'))
+            )
+            trend_dict = {item['label']: item['count'] for item in trend_data}
+            weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+
+            logger.error(f"Error during prediction: {e}")
+            return render(request, 'home.html', {
+                'error': str(e),
+                'labels': fixed_labels,
+                'counts': counts,
+                'weekly_counts': weekly_counts,
+            })
+
+    # For GET requests, also pass trends data
+    category_counts = (
+        WastePrediction.objects.values('label')
+        .annotate(count=Count('label'))
+        .order_by('-count')
+    )
+    category_dict = {item['label']: item['count'] for item in category_counts}
+    counts = [category_dict.get(label, 0) for label in fixed_labels]
+
+    last_week = timezone.now() - timedelta(days=7)
+    trend_data = (
+        WastePrediction.objects.filter(created_at__gte=last_week)
+        .values('label')
+        .annotate(count=Count('label'))
+    )
+    trend_dict = {item['label']: item['count'] for item in trend_data}
+    weekly_counts = [trend_dict.get(label, 0) for label in fixed_labels]
+
+    return render(request, 'home.html', {
+        'labels': fixed_labels,
+        'counts': counts,
+        'weekly_counts': weekly_counts,
+    })
+
+def weekly_trends(request):
+    # Get data from the last 7 days
+    one_week_ago = timezone.now() - timedelta(days=7)
+
+    # Count each label's frequency
+    weekly_data = WastePrediction.objects.filter(created_at__gte=one_week_ago) \
+        .values('label') \
+        .annotate(count=Count('label'))
+
+    # Prepare labels and counts for Chart.js
+    weekly_labels = [entry['label'] for entry in weekly_data]
+    weekly_counts = [entry['count'] for entry in weekly_data]
+
+    return render(request, 'home.html', {
+        'weekly_labels': weekly_labels,
+        'weekly_counts': weekly_counts
+    })

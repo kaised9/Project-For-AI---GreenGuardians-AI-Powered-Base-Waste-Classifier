@@ -143,36 +143,49 @@ body {
     height: 100%;
     background: #4caf50;
 }
-
 /* Footer Section */
 .contact-footer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 40px 0;
-    background: #f0f0f0;
-    margin-top: 40px;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 50px 20px;
+    background: linear-gradient(to right, #43cea2, #185a9d); /* Green to blue */
+    color: #fff;
+    margin-top: 60px;
     text-align: center;
-    border-top: 1px solid #ddd;
+    border-top: 4px solid #0f3c6e;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.footer-item {
+    margin: 20px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    flex: 1 1 200px;
+}
+
+.footer-item:hover {
+    transform: translateY(-5px);
+    color: #ffeb3b;
 }
 
 .footer-item h4 {
     margin: 0;
     font-weight: bold;
-    font-size: 18px;
-    color: #2c5e2e;
+    font-size: 20px;
+    color: #ffffff;
 }
 
 .footer-item p {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #444;
+    margin-top: 8px;
+    font-size: 15px;
+    color: #e0f7fa;
 }
 
 /* Trend Dashboard */
 .trend-dashboard {
     margin-top: 40px;
-    padding: 10px;
+    padding: 30px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
