@@ -64,17 +64,17 @@
                 <div class="result-extra">
                     <strong>After Recycling Suggestion:</strong>
                     {% if prediction.label == "Plastic" %}
-                        Your item could become a reusable water bottle!
+                        Your Item Could Become a Reusable Water Bottle!
                     {% elif prediction.label == "Paper" %}
-                        This could be turned into notebook paper!
+                        This Could Be Turned into Notebook Paper !
                     {% elif prediction.label == "Metal" %}
-                        Possibly reused in electronics or construction.
+                        Possibly Reused in Electronics or Construction.
                     {% elif prediction.label == "Organic" %}
-                        Great for composting into garden fertilizer.
+                        Great for Composting into Garden Fertilizer.
                     {% elif prediction.label == "Fabric" %}
-                        Consider donating or repurposing your fabric to reduce waste.
+                        Consider Donating or Repurposing your Fabric to Reduce Waste.
                     {% else %}
-                        Recycling suggestion unavailable.
+                        Recycling Suggestion Unavailable.
                     {% endif %}
                 </div>
             </div>
