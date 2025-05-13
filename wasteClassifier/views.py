@@ -23,16 +23,17 @@ model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 model.eval()
 
 # Waste categories 
-class_names = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
+class_names = ['Fabric', 'Glass', 'Metal', 'Organic', 'Paper', 'Plastic']
 
 # Material and recyclability map
 material_map = {
-    'Plastic': ('Polyethylene (PE)', True),
-    'Paper': ('Cellulose', True),
+    
+    'Fabric': ('Fabric (Cotton , Polyester)', False),
+    'Glass': ('Silica (SiO₂)', True),  
     'Metal': ('Aluminum or Steel', True),
     'Organic': ('Biodegradable', True),
-    'Glass': ('Silica (SiO₂)', True),
-    'Fabric': ('Fabric (Cotton , Polyester)', False)
+    'Paper': ('Cellulose', True),
+    'Plastic': ('Polyethylene (PE)', True),
 }
 
 # Waste category indices
@@ -45,7 +46,7 @@ def home(request):
         .annotate(count=Count('label'))
         .order_by('-count')
     )
-    fixed_labels = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
+    fixed_labels = ['Fabric', 'Glass', 'Metal', 'Organic', 'Paper', 'Plastic']
     category_dict = {item['label']: item['count'] for item in category_counts}
     counts = [category_dict.get(label, 0) for label in fixed_labels]
 
@@ -69,7 +70,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 def classify(request):
-    fixed_labels = ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric']
+    fixed_labels = ['Fabric', 'Glass', 'Metal', 'Organic', 'Paper', 'Plastic']
 
     if request.method == 'POST':
         try:
