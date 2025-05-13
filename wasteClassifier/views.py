@@ -162,6 +162,7 @@ def classify(request):
                 'label': label,
                 'confidence': round(confidence_score, 2),
                 'recyclable': recyclable,
+                'material_type': material_type,  
             }
 
             # All-time counts

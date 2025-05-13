@@ -40,10 +40,12 @@
                 <p><strong>Confidence:</strong> {{ prediction.confidence }}%</p>
 
                 <!-- Feature 1: Material Breakdown -->
-                <div class="result-extra">
+                {% if prediction %}
+                <div>
                     <strong>Material Insight:</strong> {{ prediction.material_type }}<br>
-                    <strong>Recyclability:</strong> {{ prediction.recyclable|yesno:"Yes,No" }}<br>
+                    <strong>Recyclable:</strong> {{ prediction.recyclable|yesno:"Yes,No" }}
                 </div>
+                {% endif %}
 
                 <!-- Feature 2: Anomaly Detection -->
                 {% if prediction.label == "Unknown" %}
