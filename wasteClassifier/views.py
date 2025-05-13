@@ -9,6 +9,7 @@ import logging
 from django.db.models import Count
 from datetime import timedelta
 from django.utils import timezone
+from django.http import JsonResponse
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -258,3 +259,13 @@ def weekly_trends(request):
         'weekly_labels': weekly_labels,
         'weekly_counts': weekly_counts
     })
+
+def trends_api(request):
+    fixed_labels = ['Fabric', 'Glass', 'Metal', 'Organic', 'Paper', 'Plastic']
+    category_counts = (
+        WastePrediction.objects.values('label')
+        .annotate(count=Count('label'))
+    )
+    category_dict = {item['label']: item['count'] for item in category_counts}
+    counts = [category_dict.get(label, 0) for label in fixed_labels]
+    return JsonResponse({'labels': fixed_labels, 'counts': counts})

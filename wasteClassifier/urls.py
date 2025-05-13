@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('classify/', views.classify, name='classify'),
+    path('api/trends/', views.trends_api, name='trends_api'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
@@ -15,4 +16,4 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 media_path = os.path.join(BASE_DIR, 'media')
-print(media_path) 
+print(media_path)

@@ -112,34 +112,34 @@
     <!-- JavaScript -->
     <script>
         const ctx = document.getElementById('categoryChart').getContext('2d');
-        const categoryChart = new Chart(ctx, {
+        let categoryChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric'],
+                labels: {{ labels|safe }},
                 datasets: [{
-                    label: 'Top Waste Types',
-                    data: [15, 10, 5, 8, 3, 2], // Example: Replace with real values
+                    label: 'Waste Trends',
+                    data: {{ counts|safe }},
                     backgroundColor: [
-                        '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0', '#3f51b5'
-                    ]
+                        '#4caf50', '#ff9800', '#607d8b',
+                        '#8bc34a', '#9c27b0', '#3f51b5'
+                    ],
+                    borderWidth: 1
                 }]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Most Classified Waste Categories'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
+            options: { /* ... your options ... */ }
         });
+
+        function updateTrends() {
+            fetch('/api/trends/')
+                .then(response => response.json())
+                .then(data => {
+                    categoryChart.data.labels = data.labels;
+                    categoryChart.data.datasets[0].data = data.counts;
+                    categoryChart.update();
+                });
+        }
+
+        setInterval(updateTrends, 5000); // Update every 5 seconds
     </script>
 </body>
 </html>
