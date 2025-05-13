@@ -45,6 +45,10 @@
                     <strong>Material Insight:</strong> {{ prediction.material_type }}<br>
                     <strong>Recyclable:</strong> {{ prediction.recyclable|yesno:"Yes,No" }}
                 </div>
+                {% else %}
+                <div>
+                    <strong>Material Insight:</strong> Upload an Image to See Material Details Here.
+                </div>
                 {% endif %}
 
                 <!-- Feature 2: Anomaly Detection -->
@@ -75,8 +79,10 @@
                         Great for Composting into Garden Fertilizer.
                     {% elif prediction.label == "Fabric" %}
                         Consider Donating or Repurposing your Fabric to Reduce Waste.
+                    {% elif prediction.label == "Fabric" %}
+                        Rinse and Recycle !!! Place Clean Glass Items in Your Recycling Bin.
                     {% else %}
-                         ✨ Rinse and Recycle !!! Place Clean Glass Items in Your Recycling Bin.
+                         Upload Image Then You will Show How To Reuse.
                     {% endif %}
                 </div>
             </div>
