@@ -27,13 +27,7 @@
                 identify the type instantly using our smart AI model.
             </p>
 
-            <form action="/classify/" method="post" enctype="multipart/form-data" class="contact-form">            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}            {% if prediction %}
-            <div class="result-box">
-                <!-- ... your result code ... -->
-            </div>
-            {% endif %}
+            <form action="/classify/" method="post" enctype="multipart/form-data" class="contact-form">
                 {% csrf_token %}
                 <label>Upload Waste Image</label>
                 <input type="file" name="waste_image" accept="image/*" required>
@@ -89,7 +83,7 @@
 
     <div class="trend-dashboard">
         <h3>📊 Category Trends</h3>
-        <canvas id="categoryChart" width="400" height="200"></canvas>
+        <canvas id="categoryChart" width="400" height="250"></canvas>
     </div>
     
 
@@ -98,7 +92,6 @@
             <h4>♻️ Eco-Friendly</h4>
             <p>Promoting Sustainable Habits</p>
         </div>
-        
 
         <div class="footer-item">
             <h4>🤖 Smart AI</h4>
@@ -116,64 +109,37 @@
         </div>
     </footer>
 
-    <!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    const weeklyLabels = {{ weekly_labels|safe }};
-    const weeklyCounts = {{ weekly_counts|safe }};
-
-    const ctx = document.getElementById('categoryChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: weeklyLabels,
-            datasets: [{
-                label: 'Waste Trends (Past 7 Days)',
-                data: weeklyCounts,
-                backgroundColor: [
-                    '#4caf50', // Plastic
-                    '#ff9800', // Paper
-                    '#607d8b', // Metal
-                    '#8bc34a', // Organic
-                    '#9c27b0', // Glass
-                    '#3f51b5'  // Fabric
-                ],
-                borderColor: [
-                    '#388e3c', // Plastic
-                    '#f57c00', // Paper
-                    '#455a64', // Metal
-                    '#689f38', // Organic
-                    '#7b1fa2', // Glass
-                    '#283593'  // Fabric
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Most Classified Waste (This Week)'
+    <!-- JavaScript -->
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Plastic', 'Paper', 'Metal', 'Organic', 'Glass', 'Fabric'],
+                datasets: [{
+                    label: 'Top Waste Types',
+                    data: [15, 10, 5, 8, 3, 2], // Example: Replace with real values
+                    backgroundColor: [
+                        '#4caf50', '#ff9800', '#607d8b', '#8bc34a', '#9c27b0', '#3f51b5'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Most Classified Waste Categories'
+                    }
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.chart.data.labels[context.dataIndex] + ': ' + context.parsed.y;
-                        }
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
             }
-        }
-    });
-</script>
-
+        });
+    </script>
 </body>
 </html>
